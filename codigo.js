@@ -31,18 +31,25 @@ console.log("Pasando ruta relativa a ruta absoluta: ".bgCyan + path.resolve(user
             console.log('El formato del archivo no es válido!'.bgYellow);
               
             };
-        
+    let count = [];      
     fs.readFile(userRoute, 'utf-8', (err, data) => {
     if(err) {
       console.log('error: ', err);
     } else {
-      console.log(data);
+      //esto lo tengo que meter en un array
+      console.log('Mostrando los links del archivo:'.bgYellow, data.match(linkFinder));
+      count = data.match(linkFinder);
+      console.log('El total de links encontrados es: '.bgCyan, count.length);
+     /*   if(data.match === 200){
+        count.push ()
+      }  */
     }
   }); 
 
+
+
   
-
-
+/* 
   module.exports = {
     //
-  };
+  }; */
