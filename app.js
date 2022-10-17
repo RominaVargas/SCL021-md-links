@@ -38,7 +38,6 @@ console.log(('Pruebas/documentoLinks.txt').split(","));
           console.log(data);
         }
       }); */
-
     //PASO 5: CONTAR LINKS UNICOS, 
     
     //PASO 6: CONTAR LINKS VALIDOS Y ROTOS.

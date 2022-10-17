@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 //const { absolutRoute } = require('./index.js');
-let fs = require('fs');
 let path = require('path');
+let fs = require('fs');
 let userRoute = process.argv[2]; 
 let formatOK = ".md"; 
 let colors = require('colors');
 let linkFinder = /(https?:\/\/)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/gi;
-
-
+const https = require('https');
 
 //volver la ruta a relativa para partir
 let absolutRoute = () => {
@@ -29,26 +28,61 @@ console.log("Pasando ruta relativa a ruta absoluta: ".bgCyan + path.resolve(user
              
         } else {
             console.log('El formato del archivo no es válido!'.bgYellow);
-              
             };
-    let count = [];      
-    fs.readFile(userRoute, 'utf-8', (err, data) => {
-    if(err) {
-      console.log('error: ', err);
-    } else {
-      //esto lo tengo que meter en un array
-      console.log('Mostrando los links del archivo:'.bgYellow, data.match(linkFinder));
+
+function readLinks (){
+    return new Promise ((resolve, reject) => {
+       let count = [];      
+              fs.readFile(userRoute, 'utf-8', (err, data) => {
+         if(err) {
+      //console.log('error: ', err);
+      reject (err);
+       } else {
       count = data.match(linkFinder);
-      console.log('El total de links encontrados es: '.bgCyan, count.length);
-     /*   if(data.match === 200){
-        count.push ()
-      }  */
+      console.log('El total de links encontrados es: '.bgYellow, count.length);
+      resolve (data.match(linkFinder));
     }
   }); 
+  })
+}
+
+readLinks().then((result)=>{
+console.log(result);
+uniqueLinks(result); //llamamos la funcion de abajo
+validLinks(result);
+}).catch((errorcito)=> {
+console.log(errorcito);
+}) 
+
+//hay que pasarla en el then de readlinks, pq ese es el caso de exito al revisar links
+const uniqueLinks = (infoLinks) => {
+  let unique = 0;
+  infoLinks.forEach((link, index) => {
+      if(infoLinks.indexOf(link) === index) {
+          unique++
+      }
+  }) 
+  return console.log('El total de links únicos encontrados es: '.bgMagenta, unique);
+};
+
+const validLinks = (count) => {
+     return count.map(link => {
+        return new Promise((resolve, reject) => {
+            https.get(link, res => {
+                if(res.statusCode === 200) {
+                    resolve({count: process.argv[2], url: link, code: res.statusCode, message: "OK"})
+                } else {
+                  reject({count: process.argv[2], url: link, code: res.statusCode, message: "FAIL"})
+                }
+              })
+              console.log('aqui estoy');
+        })
+    })
+};
 
 
 
-  
+
 /* 
   module.exports = {
     //
