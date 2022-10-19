@@ -45,15 +45,6 @@ function readLinks (){
   }); 
   })
 }
-
-readLinks().then((result)=>{
-console.log(result);
-uniqueLinks(result); //llamamos la funcion de abajo
-validLinks(result);
-}).catch((errorcito)=> {
-console.log(errorcito);
-}) 
-
 //hay que pasarla en el then de readlinks, pq ese es el caso de exito al revisar links
 const uniqueLinks = (infoLinks) => {
   let unique = 0;
@@ -64,7 +55,6 @@ const uniqueLinks = (infoLinks) => {
   }) 
   return console.log('El total de links únicos encontrados es: '.bgMagenta, unique);
 };
-
 const validLinks = (count) => {
      return count.map(link => {
         return new Promise((resolve, reject) => {
@@ -75,12 +65,26 @@ const validLinks = (count) => {
                   reject({count: process.argv[2], url: link, code: res.statusCode, message: "FAIL"})
                 }
               })
-              console.log('aqui estoy');
         })
     })
 };
 
+readLinks()
+  .then((result) => {
+    console.log(result);
+    uniqueLinks(result); //llamamos la funcion de abajo
+    const linkPromises = validLinks(result);
+    //console.log(validLinks(result));
 
+    return Promise.allSettled(linkPromises);
+  })
+  .then((resPromises) => {
+    console.log('Verificando el estado de los links:'.red)
+    console.log(resPromises);
+  })
+  .catch((errorcito) => {
+    console.log(errorcito);
+  }); 
 
 
 /* 
