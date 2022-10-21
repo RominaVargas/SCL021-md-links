@@ -14,7 +14,7 @@ algunas estadísticas..
 
 ## 2. Diagrama de flujo del proyecto del proyecto
 
-![](https://file%2B.vscode-resource.vscode-cdn.net/Users/moonah/Desktop/LABORATORIA/SCL021-md-links/diagrama%20de%20flujo.png?version%3D1666311804383)
+![](src/diagramaDeFlujo.png)
 
 ## 3. Objetivos de aprendizaje
 
